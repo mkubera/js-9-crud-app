@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CRUD</title>
-  </head>
-  <body>
-    <div id="app">
-      <button id="addPost" class="btn--create">Add a New Post</button>
 
-      <ul id="posts"></ul>
-    </div>
-    <script type="module" src="./main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRUD</title>
+</head>
+
+<body>
+  <div id="app">
+    <form id="addPostForm">
+      <h3>New Post</h3>
+      <input type="text" name="title" placeholder="title" value="Title1" />
+      <textarea name="body" cols="30" placeholder="body" rows="5">Body1</textarea>
+      <button class="btn--create">Add a New Post</button>
+    </form>
+
+    <ul id="posts"></ul>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+
 </html>

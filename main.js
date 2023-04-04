@@ -1,59 +1,23 @@
 import "./style.css";
-import ApiPosts from "./apiPosts";
-import View from "./view";
+import ApiPosts from "./js/api/posts";
+import Dom from "./js/utils/dom";
 
-const qs = (s) => document.querySelector(s);
-const qsa = (s) => document.querySelectorAll(s);
+const addPostForm = Dom.qs("#addPostForm");
 
-const addPostBtn = qs("#addPost");
-// const postsDOM = qs("#posts");
-let posts = [];
-
-const deletePost = async (postId) => {
-	try {
-		// SUCCESS (Promise: fulfilled)
-		const response = await fetch(
-			`https://jsonplaceholder.typicode.com/posts/${postId}`,
-			{
-				method: "DELETE",
-			},
-		);
-		// Data update
-		posts = posts.filter((p) => p.id !== postId);
-		// View/UI/DOM update
-		viewUsers();
-	} catch (error) {
-		// ERROR (Promise: rejected)
-		console.log(error);
-	}
-};
-
-// const fetchUsers = async () => {
-//   const response = await fetch("https://jsonplaceholder.typicode.com/users");
-//   const users = await response.json();
-//   return users;
-// };
-
-// const doStuff = async () => {
-//   try {
-//     const users = await fetchUsers();
-//     console.log(users);
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-
-// doStuff();
-
+// Fetch data when App starts
 ApiPosts.getPosts();
 
+// EVENTS
+addPostForm.addEventListener("submit", (e) => {
+	e.preventDefault();
 
-// CREATE
-addPostBtn.addEventListener("click", (e) => {
+	const { title, body } = e.currentTarget.elements;
+
 	const newPost = {
-		title: "Mango",
-		body: "CRUD is awesome",
+		title: title.value,
+		body: body.value,
 		userId: 1,
+		isEdited: false,
 	};
 
 	ApiPosts.addPost(newPost);
