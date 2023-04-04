@@ -23,15 +23,15 @@ const getPosts = async (limit = 3) => {
 
 // POST - CREATE - 201 CREATED
 const addPost = async (newPost = {}) => {
-	const options = {
-		method: "POST",
-		body: JSON.stringify(newPost), // TODO: try..catch
-		headers: {
-			"Content-Type": "application/json; charset=UTF-8",
-		},
-	};
-
 	try {
+		const options = {
+			method: "POST",
+			body: JSON.stringify(newPost),
+			headers: {
+				"Content-Type": "application/json; charset=UTF-8",
+			},
+		};
+
 		const response = await fetch(
 			"https://jsonplaceholder.typicode.com/posts",
 			options,
@@ -52,17 +52,17 @@ const addPost = async (newPost = {}) => {
 
 // PATCH - UPDATE - 200 OK
 const editPost = async (postId, postData) => {
-	const url = `https://jsonplaceholder.typicode.com/posts/${postId}`;
-
-	const options = {
-		method: "PATCH",
-		body: JSON.stringify(postData),
-		headers: {
-			"Content-Type": "application/json; charset=UTF-8",
-		},
-	};
-
 	try {
+		const url = `https://jsonplaceholder.typicode.com/posts/${postId}`;
+
+		const options = {
+			method: "PATCH",
+			body: JSON.stringify(postData),
+			headers: {
+				"Content-Type": "application/json; charset=UTF-8",
+			},
+		};
+
 		const response = await fetch(url, options);
 		const data = await response.json();
 		console.log(data);
