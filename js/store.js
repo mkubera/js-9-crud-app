@@ -3,7 +3,7 @@
 // note: all functions are IMPURE (because they manipulate Local Storage)
 
 // ########################################
-// Funkcje prywatne (nie-exportowane)
+// Private functions (not-exported)
 // ########################################
 
 // UPDATE
@@ -17,7 +17,7 @@ const setPosts = (newPosts) => {
 };
 
 // ########################################
-// Funkcje publiczne (exportowane)
+// Public functions (exported)
 // ########################################
 
 // READ
