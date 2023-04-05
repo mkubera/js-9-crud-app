@@ -1,19 +1,19 @@
-import View from "../view";
+import View from "./../view";
+import Store from "./../store";
 
 // GET - READ - 200 OK
 const getPosts = async (limit = 3) => {
 	try {
 		// SUCCESS (Promise: fulfilled)
-		const response = await fetch(
-			`https://jsonplaceholder.typicode.com/posts?_limit=${limit}`,
-		);
+		const url = `https://jsonplaceholder.typicode.com/posts?_limit=${limit}`;
+		const response = await fetch(url);
+		// data: Array of Posts{id,title,body,userId}
 		const data = await response.json();
 
-		const postsWithIsEdited = data.map((p) => ({ ...p, isEdited: false }));
+		// Data update
+		Store.initPosts(data);
 
-		const newPosts = JSON.stringify(postsWithIsEdited);
-		localStorage.setItem("posts", newPosts);
-
+		// View/UI/DOM update
 		View.viewUsers();
 	} catch (error) {
 		// ERROR (Promise: rejected)
@@ -24,6 +24,8 @@ const getPosts = async (limit = 3) => {
 // POST - CREATE - 201 CREATED
 const addPost = async (newPost = {}) => {
 	try {
+		const url = "https://jsonplaceholder.typicode.com/posts";
+
 		const options = {
 			method: "POST",
 			body: JSON.stringify(newPost),
@@ -32,16 +34,13 @@ const addPost = async (newPost = {}) => {
 			},
 		};
 
-		const response = await fetch(
-			"https://jsonplaceholder.typicode.com/posts",
-			options,
-		);
+		const response = await fetch(url, options);
+		// expected data shape:
+		// {id,title,body,userId}
 		const data = await response.json();
 
 		// Data update
-		const oldPosts = JSON.parse(localStorage.getItem("posts")) || [];
-		const newPosts = JSON.stringify([...oldPosts, data]);
-		localStorage.setItem("posts", newPosts);
+		Store.addPost(data);
 
 		// View/UI/DOM update
 		View.viewUsers();
@@ -64,24 +63,12 @@ const editPost = async (postId, postData) => {
 		};
 
 		const response = await fetch(url, options);
+		// expected data shape:
+		// {id,title,body,userId}
 		const data = await response.json();
-		console.log(data);
 
 		// Data update
-		const oldPosts = JSON.parse(localStorage.getItem("posts")) || [];
-		const newPosts = JSON.stringify(
-			oldPosts.map((p) =>
-				p.id === data.id
-					? {
-							...p,
-							title: data.title,
-							body: data.body,
-							isEdited: false,
-					  }
-					: p,
-			),
-		);
-		localStorage.setItem("posts", newPosts);
+		Store.editPost(data);
 
 		// View/UI/DOM update
 		View.viewUsers();
@@ -94,21 +81,17 @@ const editPost = async (postId, postData) => {
 const deletePost = async (postId) => {
 	try {
 		// SUCCESS (Promise: fulfilled)
-		const response = await fetch(
-			`https://jsonplaceholder.typicode.com/posts/${postId}`,
-			{
-				method: "DELETE",
-			},
-		);
+		const url = `https://jsonplaceholder.typicode.com/posts/${postId}`;
+		const options = { method: "DELETE" };
+		const response = await fetch(url, options);
+
 		if (!response.status === 200) {
 			// TODO: show user "Post not delete. Try again later."
 			return;
 		}
 
 		// Data update
-		const oldPosts = JSON.parse(localStorage.getItem("posts")) || [];
-		const newPosts = JSON.stringify(oldPosts.filter((p) => p.id !== postId));
-		localStorage.setItem("posts", newPosts);
+		Store.deletePost(postId);
 
 		// View/UI/DOM update
 		View.viewUsers();

@@ -1,11 +1,12 @@
 import ApiPosts from "./api/posts";
 import Dom from "./utils/dom";
+import Store from "./store";
 
 const postsDOM = Dom.qs("#posts");
 
 // DOM functions
 const viewUsers = () => {
-	const oldPosts = JSON.parse(localStorage.getItem("posts")) || [];
+	const posts = Store.getPosts();
 
 	const templateIsEdited = ({ id, title, body }) => `
 	<form class="editPostForm" data-id="${id}">
@@ -20,7 +21,7 @@ const viewUsers = () => {
 	<button class="btn--toggle-edit" data-id="${id}" data-toggle-edit>Edit</button>
 	`;
 
-	postsDOM.innerHTML = oldPosts
+	postsDOM.innerHTML = posts
 		.map(
 			(p) => `
       <li class="post">
@@ -39,13 +40,7 @@ const viewUsers = () => {
 			const postId = Number(e.target.dataset.id);
 
 			// Data update
-			const oldPosts = JSON.parse(localStorage.getItem("posts")) || [];
-			const newPosts = JSON.stringify(
-				oldPosts.map((p) =>
-					p.id === postId ? { ...p, isEdited: !p.isEdited } : p,
-				),
-			);
-			localStorage.setItem("posts", newPosts);
+			Store.togglePostIsEdited(postId);
 
 			// View update
 			viewUsers();
@@ -76,6 +71,7 @@ const viewUsers = () => {
 	deleteBtns.forEach((btn) => {
 		btn.addEventListener("click", (e) => {
 			const postId = Number(e.target.dataset.id);
+
 			ApiPosts.deletePost(postId);
 		});
 	});
